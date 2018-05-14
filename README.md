@@ -1,5 +1,5 @@
 # check_ip
-check_IP结合开源威胁情况，判断数据包中IP地址或者IP清单中的IP地址恶意行  
+check_IP结合开源威胁情报，判断数据包中IP地址或者IP清单中的IP地址恶意性  
 
 ### 运行条件
 开源威胁情报平台AlienVault查询接口：   
