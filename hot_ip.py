@@ -248,7 +248,13 @@ if __name__ == "__main__":
             print "choose -s or -d"
             sys.exit(0)
         f = open(options.pcapfile)
-        pcap = dpkt.pcapng.Reader(f)
+        try:
+            pcap = dpkt.pcapng.Reader(f)
+        except:
+            try:
+                pcap = dpkt.pcap.Reader(f)
+            except:
+                print "pcap file format is not right..."
         printPcap(pcap, options.srcIP, options.dstIP)
         parseIPlistLocation("./out_IP.txt")
         if options.checkIP == True:
