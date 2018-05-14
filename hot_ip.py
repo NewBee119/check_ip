@@ -14,7 +14,7 @@ reload(sys);
 sys.setdefaultencoding('utf-8');
 
 url = 'http://ip.taobao.com/service/getIpInfo.php?ip='
-API_KEY = '6c09b93988fb08ba6400ef6952ef9d6304b647b94f0fb66c4cf5e2c307f23c96'
+API_KEY = '6c09b93988fb08ba6400ef6952ef9d6304b647b94f0fb66c4cf5e2c307f23c96'  #add  API_Key
 OTX_SERVER = 'https://otx.alienvault.com/'
 
 def getValue(results, keys):

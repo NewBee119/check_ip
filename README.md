@@ -2,8 +2,8 @@
 check_ip结合开源威胁情报，判断数据包中IP地址或者IP清单中的IP地址恶意性  
 
 ### 运行条件
-**查询接口**  
-AlienVault:https://otx.alienvault.com/api  
+**威胁情报查询接口**  
+AlienVault网址:https://otx.alienvault.com/api  
 需要注册一个账号以得到API_KEY，添加到hot_ip.py开头的对应字段  
 ```  
 url = 'http://ip.taobao.com/service/getIpInfo.php?ip='  
@@ -12,8 +12,9 @@ OTX_SERVER = 'https://otx.alienvault.com/'
 ```   
 
 **程序依赖包**  
-pip install OTXv2  pandas dpkt  
-
+```  
+pip install OTXv2 pandas dpkt    
+```  
 ### 运行事例 
 usage: hot_ip.py --pcapfile=./out.pcap –d -c  #数据包解析模式，对目的IP地址的恶意性进行排查  
 usage: hot_ip.py --IPfile=./iplist.txt -c     #IP清单文件解析模式，排查清单中的IP地址的恶意性  
