@@ -13,7 +13,7 @@ OTX_SERVER = 'https://otx.alienvault.com/'
 
 **程序依赖包**  
 ```  
-pip install OTXv2 pandas dpkt    
+pip install OTXv2 pandas dpkt     
 ```  
 ### 运行事例 
 usage: hot_ip.py --pcapfile=./out.pcap –d -c  #数据包解析模式，对目的IP地址的恶意性进行排查  
@@ -23,7 +23,7 @@ usage: hot_ip.py --IPfile=./iplist.txt -c     #IP清单文件解析模式，排�
 ### 其他项 
 **中间文件**   
 ```   
-out_IP.tx              #解析网络数据包时产生，源/目的IP列表  
+out_IP.txt              #解析网络数据包时产生，源/目的IP列表  
 ip_location.txt        #解析IP地址地理信息  
 malicious_results.txt  #可疑IP地址信息  
 ```  
