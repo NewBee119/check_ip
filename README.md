@@ -29,10 +29,10 @@ malicious_results.txt  #可疑IP地址信息
 ```  
 **查看结果**  
 ```  
-f117@ubuntu:~/Downloads/IP-location$ cat malicious_results.txt  
-  117.18.237.29   potentially malicious   台湾-台湾-台北   https://otx.alienvault.com/indicator/ip/117.18.237.29  
-  52.230.80.159   potentially malicious   新加坡-XX-XX   https://otx.alienvault.com/indicator/ip/52.230.80.159  
-  40.77.226.249   potentially malicious   爱尔兰-Dublin-XX   https://otx.alienvault.com/indicator/ip/40.77.226.249  
+f117@ubuntu:~/Downloads/check_ip$ cat malicious_results.txt  
+ 117.18.237.29   potentially malicious   台湾-台湾-台北   https://otx.alienvault.com/indicator/ip/117.18.237.29  
+ 52.230.80.159   potentially malicious   新加坡-XX-XX   https://otx.alienvault.com/indicator/ip/52.230.80.159  
+ 40.77.226.249   potentially malicious   爱尔兰-Dublin-XX   https://otx.alienvault.com/indicator/ip/40.77.226.249  
 ```  
 
 
