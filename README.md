@@ -2,10 +2,11 @@
 check_IP结合开源威胁情报，判断数据包中IP地址或者IP清单中的IP地址恶意性  
 
 ### 运行条件
-开源威胁情报平台AlienVault查询接口：   
+开源威胁情报平台AlienVault查询接口：  
 AlienVault:https://otx.alienvault.com/api  
-需要注册一个账号以得到API_KEY  
-程序依赖包：    
+需要注册一个账号以得到API_KEY，添加到hot_ip.py开头的对应字段  
+
+程序依赖包：    
 pip install OTXv2  pandas dpkt  
 
 ### 运行事例 
