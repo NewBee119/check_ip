@@ -251,14 +251,10 @@ if __name__ == "__main__":
         try:
             pcap = dpkt.pcapng.Reader(f)
         except:
-            try:
-                pcap = dpkt.pcap.Reader(f)
-            except:
-                print "pcap file format is not right..."
+            pcap = dpkt.pcap.Reader(f)            
         printPcap(pcap, options.srcIP, options.dstIP)
         parseIPlistLocation("./out_IP.txt")
         if options.checkIP == True:
-            print "start to analyse whether IP is malicious"
+            print "-------------check ip--------------"
             IsMalicious("./ip_location.txt")
         sys.exit(0)
-    #print "all IP have been analysed!"
