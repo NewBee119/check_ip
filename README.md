@@ -14,7 +14,13 @@ OTX_SERVER = 'https://otx.alienvault.com/'
 **程序依赖包**  
 ```  
 pip install OTXv2 pandas dpkt     
+```    
+
+**运行环境**  
 ```  
+ubuntu 16.04 64bit; ubuntu 18.04 64bit     
+```  
+
 ### 运行事例 
 usage: hot_ip.py --pcapfile=./out.pcap –d -c  #数据包解析模式，对目的IP地址的恶意性进行排查  
 usage: hot_ip.py --IPfile=./iplist.txt -c     #IP清单文件解析模式，排查清单中的IP地址的恶意性  
