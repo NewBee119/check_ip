@@ -119,11 +119,9 @@ def printPcap(pcap, if_srcIp, if_dstIP):
                 #print('Non IP Packet type not supported %s' % eth.data.__class__.__name__)
                 continue
             ip = eth.data
-            if isinstance(ip.data, dpkt.icmp.ICMP):
-                #print "Not UDP Packet"  
-                continue         #filter tcp packets
+            if isinstance(ip.data, dpkt.icmp.ICMP): 
+                continue      
             if isinstance(ip.data, dpkt.igmp.IGMP):
-                #print "Not UDP Packet"  
                 continue         #filter tcp packets
             src = socket.inet_ntoa(ip.src)
             dst = socket.inet_ntoa(ip.dst)
@@ -144,7 +142,6 @@ def printPcap(pcap, if_srcIp, if_dstIP):
                     print >>fout, "%s"% (flowList[0][2])
                     print "%s"% (flowList[0][2])
                 continue
-                #print flowList[0][0],flowList[0][1],flowList[0][2],flowList[0][3]
 
             if if_srcIp == True:
                 for i in range(0, counts):
@@ -251,6 +248,10 @@ if __name__ == "__main__":
         try:
             pcap = dpkt.pcapng.Reader(f)
         except:
+            print "it is not pcapng format..."
+            f.close()
+            f = open(options.pcapfile)
+        finally:
             pcap = dpkt.pcap.Reader(f)            
         printPcap(pcap, options.srcIP, options.dstIP)
         parseIPlistLocation("./out_IP.txt")
