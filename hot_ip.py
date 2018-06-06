@@ -257,4 +257,5 @@ if __name__ == "__main__":
         if options.checkIP == True:
             print "-------------check ip--------------"
             IsMalicious("./ip_location.txt")
+        f.close()
         sys.exit(0)
