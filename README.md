@@ -23,8 +23,8 @@ ubuntu 16.04 64bit; ubuntu 18.04 64bit
 
 ### 运行事例 
 usage: hot_ip.py --pcapfile=./out.pcap –d -c  #数据包解析模式，对目的IP地址的恶意性进行排查  
-usage: hot_ip.py --IPfile=./iplist.txt -c     #IP清单文件解析模式，排查清单中的IP地址的恶意性 
-usage: hot_ip.py --pcapf=./out.pcap -p        #数据包解析模式，对域名地址的恶意性进行排查
+usage: hot_ip.py --IPfile=./iplist.txt -c     #IP清单文件解析模式，排查清单中的IP地址的恶意性  
+usage: hot_ip.py --pcapf=./out.pcap -p        #数据包解析模式，对域名地址的恶意性进行排查  
 ![Image test](https://github.com/scu-igroup/check_ip/blob/master/image/run.png)   
 
 ### 其他项 
