@@ -9,12 +9,16 @@ import socket
 from optparse import OptionParser
 from OTXv2 import OTXv2
 import IndicatorTypes
+import argparse
+#import get_malicious
+import hashlib
+#!/usr/bin/env python
 
 reload(sys);
 sys.setdefaultencoding('utf-8');
 
 url = 'http://ip.taobao.com/service/getIpInfo.php?ip='
-API_KEY = '6c09b93988fb08ba6400ef6952ef9d6304b647b94f0fb66c4cf5e2c307f23c96'  #change your API_Key
+API_KEY = '9facf92fec62a521c595aece7d587c954db42f7d0e05bc92ccf04c489a125944'  #change your API_Key
 OTX_SERVER = 'https://otx.alienvault.com/'
 
 def getValue(results, keys):
@@ -48,7 +52,33 @@ def CheckIp(otx, ip):
                     alerts.append('In pulse: ' + pulse['name'])
 
     return alerts
- 
+
+def checkhostname(otx, hostname):
+    alerts = []
+    result = otx.get_indicator_details_by_section(IndicatorTypes.HOSTNAME, hostname, 'general')
+
+    # Return nothing if it's in the whitelist
+    validation = getValue(result, ['validation'])
+    if not validation:
+        pulses = getValue(result, ['pulse_info', 'pulses'])
+        if pulses:
+            for pulse in pulses:
+                if 'name' in pulse:
+                    alerts.append('In pulse: ' + pulse['name'])
+
+    result = otx.get_indicator_details_by_section(IndicatorTypes.DOMAIN, hostname, 'general')
+    # Return nothing if it's in the whitelist
+    validation = getValue(result, ['validation'])
+    if not validation:
+        pulses = getValue(result, ['pulse_info', 'pulses'])
+        if pulses:
+            for pulse in pulses:
+                if 'name' in pulse:
+                    alerts.append('In pulse: ' + pulse['name'])
+
+
+    return alerts
+
 def IsMalicious(Lfile):
     otx = OTXv2(API_KEY, server=OTX_SERVER)
     fin = open(Lfile,'r')
@@ -59,15 +89,28 @@ def IsMalicious(Lfile):
         location = line.strip('\n').split(":")[1].strip()
         alerts = CheckIp(otx,ip)
         if len(alerts) > 0:
-            result = 'potentially malicious'
             reference = 'https://otx.alienvault.com/indicator/ip/'+ip
-            print "%15s   %s   %s   %s" % (ip, result, location,  reference)
-            print >>fout, "%15s   %s   %s   %s" % (ip, result, location,  reference)
-            count = count +1
-        else:
-            print "%15s   not malicious   %s" % (ip, location)
-            continue
+            print 'potentially malicious:'+line+"reference:"+reference
+            print>>fout,"%s"%line
+            count=count+1
     print "-----There are %d malicious IP-----" % count
+    fin.close()
+    fout.close()
+
+def IsDNSMalicious(Lfile):
+    otx = OTXv2(API_KEY, server=OTX_SERVER)
+    fin = open(Lfile,'r')
+    fout = open('maliciousDNS.txt','w')
+    count=0
+    for line in fin:
+        hostname=line.strip('\n').strip()
+        alerts=checkhostname(otx,hostname)
+        if len(alerts)>0:
+            reference='https://otx.alienvault.com/indicator/hostname/'+hostname
+            print 'potentially malicious:'+line+'reference:'+reference
+            print>>fout,"%s"%(line+' '+reference)
+            count=count+1
+    print "-----There are %d malicious hostname-----"%count
     fin.close()
     fout.close()
 
@@ -106,6 +149,48 @@ def parseIPlistLocation(IPfile):
     except Exception,err:
         print "[error] %s" % err
 
+def parseDNS(pcap):
+    lines_seen=set()
+    
+    fout1=open("text1.txt","wb")
+    fout2=open("out_DNS.txt","wb")
+    for(ts,buf) in pcap:
+        try:
+
+            eth = dpkt.ethernet.Ethernet(buf)
+            ip=eth.data
+            udp=ip.data
+            if udp.dport!=53 and udp.sport!=53:
+                continue
+            dns=dpkt.dns.DNS(udp.data)
+            if dns.qr!=dpkt.dns.DNS_R:
+                continue
+            if dns.opcode!=dpkt.dns.DNS_QUERY:
+                continue
+            if dns.rcode!=dpkt.dns.DNS_RCODE_NOERR:
+                continue
+            if len(dns.an)<1:
+                continue
+            for answer in dns.an:
+                #print answer.name
+                result=answer.name+"\n"
+                fout1.write(result)
+                
+        except:
+            pass
+    fout1.close()
+    f=open("text1.txt","r")
+
+    for line in f:
+            
+        if line not in lines_seen:
+            print line
+            fout2.write(line)
+            lines_seen.add(line)
+            
+    f.close
+    fout2.close
+
 def printPcap(pcap, if_srcIp, if_dstIP):
     flowList = [[] for i in range(20000)]
     counts = 0
@@ -122,15 +207,14 @@ def printPcap(pcap, if_srcIp, if_dstIP):
             if isinstance(ip.data, dpkt.icmp.ICMP): 
                 continue      
             if isinstance(ip.data, dpkt.igmp.IGMP):
-                continue         #filter tcp packets
+                continue          #filter tcp packets
             src = socket.inet_ntoa(ip.src)
             dst = socket.inet_ntoa(ip.dst)
-            
             udp = ip.data
             if counts == 0 :
-                flowList[0].append(src) 
-                flowList[0].append(udp.sport) 
-                flowList[0].append(dst) 
+                flowList[0].append(src)
+                flowList[0].append(udp.sport)
+                flowList[0].append(dst)
                 flowList[0].append(udp.dport)
                 counts = counts + 1
                 countFlow[0] = 1
@@ -186,7 +270,7 @@ def printPcap(pcap, if_srcIp, if_dstIP):
     fout.close
      
 if __name__ == "__main__":
-    usage = "usage: hot_ip.py --pcapfile=./out.pcap –d -c |--OR--| hot_ip.py --IPfile=./iplist.txt -c"
+    usage = "usage: hot_ip.py --pcapfile=./out.pcap -d -c |--OR--| hot_ip.py --IPfile=./iplist.txt -c|--OR--|hot_ip.py --pcapf=./out.pcap -p"
     parser = OptionParser(usage=usage)  
     parser.add_option(
         "--pcapfile", dest="pcapfile",
@@ -194,6 +278,12 @@ if __name__ == "__main__":
         help="special the pcap file path",
         default=None
     )
+
+    parser.add_option(
+        "--pcapf",dest="pcapf",
+        action='store',type='string',
+        help="special the pcap file path",
+        default=None)
 
     parser.add_option(
         "--IPfile", dest="IPfile",
@@ -219,10 +309,15 @@ if __name__ == "__main__":
         help="check whether IP is malicious",
         dest="checkIP", default=False
     )
+
+    parser.add_option(
+        "-p", "--checkhostname",action='store_true',
+        help="check whether hostname is malicious",
+        dest="checkhostname",default=False)
   
     (options, args) = parser.parse_args() 
 
-    if (options.pcapfile is None) and (options.IPfile is None):
+    if (options.pcapfile is None) and (options.IPfile is None)and(options.pcapf is None):
         print usage
         sys.exit(0)
 
@@ -240,6 +335,23 @@ if __name__ == "__main__":
             IsMalicious("./ip_location.txt")
         sys.exit(0)
 
+    if options.pcapf is not None:
+        f=open(options.pcapf)
+        try:
+            pcap = dpkt.pcapng.Reader(f)
+        except:
+            print "it is not pcapng format..."
+            f.close()
+        finally:
+            f = open(options.pcapf)
+            pcap = dpkt.pcap.Reader(f)
+        parseDNS(pcap)
+
+        if options.checkhostname==True:
+            print "-----------check hostname-----------"
+            IsDNSMalicious("./out_DNS.txt")
+        sys.exit(0)
+
     if options.pcapfile is not None:
         if (options.srcIP or options.dstIP) == False:
             print "choose -s or -d"
@@ -250,12 +362,13 @@ if __name__ == "__main__":
         except:
             print "it is not pcapng format..."
             f.close()
+        finally:
             f = open(options.pcapfile)
-            pcap = dpkt.pcap.Reader(f)            
+            pcap = dpkt.pcap.Reader(f)
         printPcap(pcap, options.srcIP, options.dstIP)
         parseIPlistLocation("./out_IP.txt")
+        
         if options.checkIP == True:
             print "-------------check ip--------------"
             IsMalicious("./ip_location.txt")
-        f.close()
         sys.exit(0)
