@@ -44,12 +44,10 @@ f117@ubuntu:~/Downloads/check_ip$ cat malicious_results.txt
  40.77.226.249   potentially malicious   爱尔兰-Dublin-XX   https://otx.alienvault.com/indicator/ip/40.77.226.249  
 
 fxx@fxx-X450LD:~/myprojects/check_ip$ cat maliciousDNS.txt
-graph.facebook.com
- https://otx.alienvault.com/indicator/hostname/graph.facebook.com
-data.flurry.com
- https://otx.alienvault.com/indicator/hostname/data.flurry.com
-alog.umeng.com
- https://otx.alienvault.com/indicator/hostname/alog.umeng.com
+graph.facebook.com    https://otx.alienvault.com/indicator/hostname/graph.facebook.com
+data.flurry.com    https://otx.alienvault.com/indicator/hostname/data.flurry.com
+alog.umeng.com    https://otx.alienvault.com/indicator/hostname/alog.umeng.com
+
 ```  
 
 
