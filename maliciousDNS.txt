@@ -1,0 +1,6 @@
+graph.facebook.com
+ https://otx.alienvault.com/indicator/hostname/graph.facebook.com
+data.flurry.com
+ https://otx.alienvault.com/indicator/hostname/data.flurry.com
+alog.umeng.com
+ https://otx.alienvault.com/indicator/hostname/alog.umeng.com
