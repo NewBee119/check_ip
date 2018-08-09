@@ -47,7 +47,8 @@ fxx@fxx-X450LD:~/myprojects/check_ip$ cat maliciousDNS.txt
 graph.facebook.com    https://otx.alienvault.com/indicator/hostname/graph.facebook.com
 data.flurry.com    https://otx.alienvault.com/indicator/hostname/data.flurry.com
 alog.umeng.com    https://otx.alienvault.com/indicator/hostname/alog.umeng.com
-
 ```  
+**参考文章**  
+http://www.freebuf.com/system/171987.html  
 
 
